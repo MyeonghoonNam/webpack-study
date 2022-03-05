@@ -119,3 +119,70 @@ module.exports = {
   }
 }
 ```
+
+## Output
+- `output` 속성은 웹팩을 돌리고 난 결과물의 파일 경로를 의미한다.
+- `entry` 속성과 달리 무조건 객체 형태로 옵션들을 추가해야 한다.
+
+```javascript
+// webpack.config.js
+module.exports = {
+  output: {
+    filename: 'bundle.js'
+  }
+}
+```
+
+### Output 속성 옵션 형태
+- 최소한 `filename` 속성은 지정해줘야 하며 일반적으로 아래와 같이 `path` 속성을 함께 정의해야 한다.
+- `filename` : 웹팩으로 빌드한 파일의 이름을 의미한다.
+- `path` : 해당 파일의 경로를 의미한다.
+- `resolve()` : 인자로 넘어온 경로(`./dist`)들을 조합하여 유효한 파일 경로를 만들어주는 Nodejs Api이다.
+
+```javascript
+// webpack.config.js
+const path = require('path');
+
+module.exports = {
+  output: {
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, './dist')
+  }
+}
+```
+
+### Output 파일 이름 옵션
+- `filename` 속성에 여러 가지 옵션을 지정할 수 있다.
+- 결과 파일 이름에 `entry` 속성을 포함하는 옵션
+```javascript
+module.exports = {
+  output: {
+    filename: '[name].bundle.js'
+  }
+};
+```
+- 결과 파일 이름에 웹팩 내부적으로 사용하는 `모듈 ID`를 포함하는 옵션
+```javascript
+module.exports = {
+  output: {
+    filename: '[id].bundle.js'
+  }
+};
+```
+- 빌드를 할 때 마다 `고유 해시 값`을 포함하는 옵션
+```javascript
+module.exports = {
+  output: {
+    filename: '[name].[hash].bundle.js'
+  }
+};
+```
+- 웹팩의 각 모듈 내용을 기준으로 `생성된 해시 값`을 포함하는 옵션
+```javascript
+module.exports = {
+  output: {
+    filename: '[chunkhash].bundle.js'
+  }
+};
+```
+- 이와 같은 옵션들을 사용하면 애플리케이션의 개발 코드 변화가 있을 경우 강제적인 새로고침을 통한 확인이 아닌 `가시적으로 표시한 값들을 통해 변화를 감지`할 수 있는 편리함이 있다.
