@@ -186,3 +186,17 @@ module.exports = {
 };
 ```
 - 이와 같은 옵션들을 사용하면 애플리케이션의 개발 코드 변화가 있을 경우 강제적인 새로고침을 통한 확인이 아닌 `가시적으로 표시한 값들을 통해 변화를 감지`할 수 있는 편리함이 있다.
+
+## Loader
+- `Loader`는 웹팩이 웹 애플리케이션을 해석할 때 자바스크립트 파일이 아닌 웹 자원(HTML, CSS, Images, 폰트 등)들을 변환할 수 있도록 도와주는 속성이다.
+
+- entry나 output 속성과는 다르게 `module`이라는 속성을 사용한다.
+
+```javascript
+// webpack.config.js
+module.exports = {
+  module: {
+    rules: []
+  }
+}
+```
