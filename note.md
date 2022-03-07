@@ -200,3 +200,135 @@ module.exports = {
   }
 }
 ```
+
+### Loder가 필요한 이유
+- 웹팩으로 애플리케이션을 빌드할 때 Loader를 사용하지 않는다면 에러가 발생한다.
+
+- 이는 Loader가 없을 경우 빌드 과정에서 js가 아닌 `다른 웹 자원들(css, image 등)에 대한 해석이 불가능`하기에 발생하는 에러이다.
+
+### Loader 적용
+- 여러 웹 자원들에 대한 Loader 종류는 다양하다.
+
+- 여러 종류의 Loader 중에서 CSS Loader를 적용하는 방법을 예시로 알아보자. 대부븐 Loader 별로 적용하는데 큰 차이가 없다.
+
+```javascript
+// 라이브러리 구성
+yarn add -D css-loader
+```
+
+```javascript
+// webpack.config.js
+module.exports = {
+  entry: './app.js',
+  output: {
+    filename: 'bundle.js'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: ['css-loader']
+      }
+    ]
+  }
+}
+```
+
+- 위의 코드에서 Loader를 적용하는 핵심 속성은 `module` 속성이다.
+
+- `rules` 배열에 객체 한 쌍을 추가하고 그 객체에 2개의 속성을 추가한다.
+
+- `test` : `Loader를 적용할 파일 유형`으로 일반적으로 정규 표현식을 사용한다.
+
+- `use` : `해당 파일에 적용할 Loader 이름`을 나열한다.
+
+- 위 코드를 통해 해당 프로젝트의 모든 CSS 파일에 대해서 CSS loader를 적용할 수 있다.
+### 자주 사용되는 Loader 종류
+- 위에서 말했듯이 다양한 웹 자원들에 대한 Loader의 종류는 다양하다.
+```javascript
+- Babel Loader
+- Sass Loader
+- File Loader
+- Vue Loader
+- TS Loader
+...
+```
+
+- 위에서 적용한 CSS loader 뿐 아니라 여러 종류의 loader를 적용하려면 필요한 loader 라이브러리를 package.json에 추가하고 아래와 같이 `rules` 배열에 loader 옵션을 추가해야한다.
+
+```javascript
+// webpack.config.js
+module.exports = {
+  entry: './app.js',
+  output: {
+    filename: 'bundle.js'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: ['css-loader']
+      },
+      {
+        test: /\.ts$/,
+        use: ['ts-loader']
+      }
+    ]
+  }
+}
+```
+
+### Loader 적용 순서
+- 특정 파일에 대해 `여러 개의 로더를 사용하는 경우 로더가 적용되는 순서에 주의`해야 한다.
+
+- Loader는 `기본적으로 오른쪽에서 왼쪽 순으로 적용`된다.
+
+```javascript
+// webpack.config.js
+// CSS의 확장 문법인 SCSS 파일에 로더를 적용하는 경우
+module.exports = {
+  entry: './app.js',
+  output: {
+    filename: 'bundle.js'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.scss$/,
+        use: ['css-loader', 'scss-loader']
+      }
+    ]
+  }
+}
+```
+
+- 위 코드는 scss 파일에 대해 먼저 scss-loader를 통해 css 파일로 전처리를 진행하고 css 파일을 웹팩에서 해석할 수 있도록 동작하게 해준다.
+
+## Plugin
+- 플러그인은 `웹팩의 기본적인 동작에 추가적인 기능을 제공`하는 속성이다.
+
+- 로더랑 비교해보면 `로더는 파일을 해석하고 변환하는 번들링 과정에 관여`하지만, `플러그인은 번들링이 이루어진 결과물의 형태를 바꾸는 역할`을 한다.
+
+```javascript
+// webpack.config.js
+var webpack = require('webpack');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+
+module.exports = {
+  // ...
+
+  plugins: [
+    new HtmlWebpackPlugin(),
+    new webpack.ProgressPlugin()
+  ]
+
+  // ...
+}
+```
+
+- 위 코드와 같이 plugins 배열에 `생성자 함수를 통해 생성한 객체 인스턴스`를 추가하여 사용한다.
+
+- 플러그인 역시 로더와 마찬가지로 종류가 다양하므로 특정 상황에 필요에 의해 사용하면 된다.
+
+- `HtmlWebpackPlugin`: 웹팩으로 빌드한 결과물로 HTML 파일을 생성해준다.
+- `ProgressPlugin`: 웹팩의 빌드 진행율을 표시해주는 플러그인
